@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Tic Tac Nole</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="header">Header</string>
+    <string name="footer">Created By: Victoria Raymore</string>
+    <string name="welcome">Welcome!</string>
+    <string name="box">Box</string>
+    <string name="hvc">1 Player</string>
+    <string name="hvh">2 Player</string>
+    <string name="turn1">Player 1 (X)</string>
+    <string name="turn2">Player 2 (O)</string>
+    <string name="newGame">New Game</string>
+    <string name="win1">Player 1 Wins!</string>
+    <string name="win2">Player 2 Wins!</string>
+    <string name="win3">Tie Game.</string>
+    <string name="win4">You Win!</string>
+    <string name="computerWin">The Computer Wins.</string>
+</resources>
