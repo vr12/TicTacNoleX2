@@ -1,20 +1,36 @@
 package com.android.tictacnole;
 
-import android.support.v7.app.AppCompatActivity;
+import android.app.FragmentManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.IntentFilter;
+import android.net.wifi.WpsInfo;
+import android.net.wifi.p2p.WifiP2pConfig;
+import android.net.wifi.p2p.WifiP2pDevice;
+import android.net.wifi.p2p.WifiP2pInfo;
+import android.net.wifi.p2p.WifiP2pManager;
+import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import java.util.Random;
-import android.app.FragmentManager;
 import android.widget.Toast;
-import android.view.Gravity;
+
+import java.net.InetAddress;
+import java.util.Random;
 
 
 public class MainActivity extends AppCompatActivity
 {
+    WifiP2pManager mManager;
+    Channel mChannel;
+    WifiDirectBroadcastReceiver receiver;
+    IntentFilter mIntentFilter;
+
     private MyFragment fragment;
     
     //save views for all boxes
@@ -31,6 +47,12 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mIntentFilter = new IntentFilter();
+        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
+        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
+        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
+        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
 
         FragmentManager fmanager = getFragmentManager();
         fragment = (MyFragment) fmanager.findFragmentByTag("f");
@@ -64,6 +86,68 @@ public class MainActivity extends AppCompatActivity
         TV2 = (TextView)findViewById(R.id.button2);
 
         fixRotation();
+
+        mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
+        mChannel = mManager.initialize(this, getMainLooper(), null);
+        receiver = new WiFiDirectBroadcastReceiver(mManager, mChannel, this);
+
+        mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
+
+            @Override
+            public void onSuccess() {
+                // Code for when the discovery initiation is successful goes here.
+                // No services have actually been discovered yet, so this method
+                // can often be left blank.  Code for peer discovery goes in the
+                // onReceive method, detailed below.
+            }
+
+            @Override
+            public void onFailure(int reasonCode) {
+                // Code for when the discovery initiation fails goes here.
+                // Alert the user that something went wrong.
+            }
+        });
+    }
+
+    @Override
+    public void connect() {
+        // Picking the first device found on the network.
+        WifiP2pDevice device = peers.get(0);
+
+        WifiP2pConfig config = new WifiP2pConfig();
+        config.deviceAddress = device.deviceAddress;
+        config.wps.setup = WpsInfo.PBC;
+
+        mManager.connect(mChannel, config, new WifiP2pManager.ActionListener() {
+
+            @Override
+            public void onSuccess() {
+                // WiFiDirectBroadcastReceiver will notify us. Ignore for now.
+            }
+
+            @Override
+            public void onFailure(int reason) {
+                //error
+            }
+        });
+    }
+
+    @Override
+    public void onConnectionInfoAvailable(final WifiP2pInfo info) {
+
+        // InetAddress from WifiP2pInfo struct.
+        InetAddress groupOwnerAddress = info.groupOwnerAddress.getHostAddress();
+
+        // After the group negotiation, we can determine the group owner.
+        if (info.groupFormed && info.isGroupOwner) {
+            // Do whatever tasks are specific to the group owner.
+            // One common case is creating a server thread and accepting
+            // incoming connections.
+        } else if (info.groupFormed) {
+            // The other device acts as the client. In this case,
+            // you'll want to create a client thread that connects to the group
+            // owner.
+        }
     }
 
     @Override
@@ -95,6 +179,7 @@ public class MainActivity extends AppCompatActivity
     protected void onPause()
     {
         super.onPause();
+        unregisterReceiver(receiver);
         fragment.mediaPlayer.pause();
     }
 
@@ -102,6 +187,8 @@ public class MainActivity extends AppCompatActivity
     protected void onResume()
     {
         super.onResume();
+        receiver = new WiFiDirectBroadcastReceiver(mManager, mChannel, this);
+        registerReceiver(receiver, intentFilter);
         fragment.mediaPlayer.start();
     }
 
