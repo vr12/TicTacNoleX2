@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Tic Tac Nole</string>
+    <string name="UUID">TicTacNole</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
