@@ -390,7 +390,7 @@ public class MainActivity extends AppCompatActivity {
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
             }
-			soundPool.play(sound[1], volume, volume, 1, 0, 1f);
+			
         }
 
         //winner is 2
@@ -407,7 +407,9 @@ public class MainActivity extends AppCompatActivity {
                 toast.show();
             }
         }
-
+	
+	    soundPool.play(sound[1], volume, volume, 1, 0, 1f);
+		
         //tie
         else {
             TV1.setText(R.string.win3);
