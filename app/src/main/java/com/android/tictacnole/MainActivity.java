@@ -557,8 +557,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void icons(View view)
+    public void iconClick(View view)
     {
         //let player choose icon for self (pick 2 if not over bluetooth)
+        switch (view.getId()) {
+            //player1
+            case R.id.icon1:
+
+                break;
+            //player2
+            case R.id.icon2:
+
+                break;
+        }
     }
 }
