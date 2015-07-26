@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
@@ -17,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -30,9 +32,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.UUID;
+import java.util.logging.Handler;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnItemClickListener {
     private MyFragment fragment;
 
     //save views for all boxes
@@ -50,6 +54,30 @@ public class MainActivity extends AppCompatActivity {
     BluetoothAdapter mBlue;
     ArrayList<String> btlist;
     ArrayList<BluetoothDevice> devices;
+    public static final UUID MY_UUID = UUID.fromString("e7ed2c99-fecd-4935-952f-1ca273c11485");
+    Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            // TODO Auto-generated method stub
+            Log.i(tag, "in handler");
+            super.handleMessage(msg);
+            switch(msg.what){
+                case SUCCESS_CONNECT:
+                    // DO something
+                    ConnectedThread connectedThread = new ConnectedThread((BluetoothSocket)msg.obj);
+                    Toast.makeText(getApplicationContext(), "CONNECT", 0).show();
+                    String s = "successfully connected";
+                    connectedThread.write(s.getBytes());
+                    Log.i(tag, "connected");
+                    break;
+                case MESSAGE_READ:
+                    byte[] readBuf = (byte[])msg.obj;
+                    String string = new String(readBuf);
+                    Toast.makeText(getApplicationContext(), string, 0).show();
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -587,8 +615,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-                            long arg3) {
+    public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
         // TODO Auto-generated method stub
 
         if(mBlue.isDiscovering()){
@@ -620,7 +647,6 @@ public class MainActivity extends AppCompatActivity {
                 // MY_UUID is the app's UUID string, also used by the server code
                 tmp = device.createRfcommSocketToServiceRecord(MY_UUID);
             } catch (IOException e) {
-                Log.i(tag, "get socket failed");
 
             }
             mmSocket = tmp;
@@ -628,14 +654,13 @@ public class MainActivity extends AppCompatActivity {
 
         public void run() {
             // Cancel discovery because it will slow down the connection
-            btAdapter.cancelDiscovery();
-            Log.i(tag, "connect - run");
+            mBlue.cancelDiscovery();
             try {
                 // Connect the device through the socket. This will block
                 // until it succeeds or throws an exception
                 mmSocket.connect();
-                Log.i(tag, "connect - succeeded");
-            } catch (IOException connectException) {    Log.i(tag, "connect failed");
+
+            } catch (IOException connectException) {
                 // Unable to connect; close the socket and get out
                 try {
                     mmSocket.close();
