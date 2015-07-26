@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+        <string name="app_name">Tic Tac Nole</string>
+
+        <string name="hello_world">Hola Mundo!</string>
+        <string name="action_settings">Ajustes</string>
+        <string name="header">Header</string>
+        <string name="footer">Creado Por: Fantastic 0100</string>
+        <string name="welcome">Bienvenido!</string>
+        <string name="box">Caja</string>
+        <string name="hvc">1 Jugador</string>
+        <string name="hvh">2 Jugadores</string>
+        <string name="scan">Bluetooth</string>
+        <string name="icons">Icons</string>
+        <string name="turn1">Primer Jugador (X)</string>
+        <string name="turn2">Segundo Jugador (O)</string>
+        <string name="newGame">Juego Nuevo</string>
+        <string name="win1">Primer Jugador Gana!</string>
+        <string name="win2">Segundo Jugador Gana!</string>
+        <string name="win3">Empate.</string>
+        <string name="win4">Usted Gana!</string>
+        <string name="computerWin">La Computadora Gana.</string>
+
+
+        <string-array name="iconOptions">
+            <item>Primer Jugador: X</item>
+            <item>FSU</item>
+            <item>UF</item>
+            <item>USF</item>
+            <item>UCF</item>
+            <item>FAMU</item>
+            <item>FAU</item>
+            <item>Segundo Jugador: O</item>
+            <item>FSU</item>
+            <item>UF</item>
+            <item>USF</item>
+            <item>UCF</item>
+            <item>FAMU</item>
+            <item>FAU</item>
+        </string-array>
+
+
+</resources>
