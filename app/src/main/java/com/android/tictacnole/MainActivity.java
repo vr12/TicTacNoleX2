@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -282,13 +283,8 @@ public class MainActivity extends AppCompatActivity {
 			soundPool.play(sound[0], 1, 1, 1, 0, 1f);
         } else {
             boxImageViews[idNum].setImageResource(R.drawable.o);
-
             fragment.board[idNum] = 'o';
 			soundPool.play(sound[0], 1, 1, 1, 0, 1f);
-
-            fragment.board[idNum] = 'o';
-			soundPool.play(sound[0], volume, volume, 1, 0, 1f);
-
         }
 		
         //check for winner
@@ -402,7 +398,6 @@ public class MainActivity extends AppCompatActivity {
                 toast.show();
                 soundPool.play(sound[1], 1, 1, 1, 0, 1f);
             }
-            soundPool.play(sound[1], volume, volume, 1, 0, 1f);
         }
 		
         //tie
