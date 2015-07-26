@@ -8,6 +8,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
@@ -15,16 +17,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemSelectedListener;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 
@@ -47,6 +48,12 @@ public class MainActivity extends AppCompatActivity {
     private ArrayAdapter mArrayAdapter;
     BluetoothAdapter mBlue;
     ArrayList<String> btlist;
+
+    //for extra sound effects and audio control
+    private SoundPool soundPool;
+    private AudioManager audioManager;
+    private float volume;
+    private int sound[] = new int[5];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +99,17 @@ public class MainActivity extends AppCompatActivity {
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         icons.setAdapter(adapter);
+
+        //set audio control and sounds
+        audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+        float actVolume = (float) audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        float maxVolume = (float) audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        volume = actVolume / maxVolume;
+        this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
+
+        soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+        sound[0] = soundPool.load(this, R.raw.flipsound, 1);
+        sound[1] = soundPool.load(this, R.raw.fsuchantwin, 1);
     }
 
     @Override
@@ -270,6 +288,8 @@ public class MainActivity extends AppCompatActivity {
             fragment.board[idNum] = 'o';
         }
 
+        soundPool.play(sound[0], volume, volume, 1, 0, 1f);
+
         //check for winner
         lookforWinner();
         if (fragment.winner != 0)
@@ -363,6 +383,8 @@ public class MainActivity extends AppCompatActivity {
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
             }
+
+            soundPool.play(sound[1], volume, volume, 1, 0, 1f);
         }
 
         //winner is 2
@@ -378,6 +400,8 @@ public class MainActivity extends AppCompatActivity {
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
             }
+
+            soundPool.play(sound[1], volume, volume, 1, 0, 1f);
         }
 
         //tie
