@@ -574,16 +574,7 @@ public class MainActivity extends AppCompatActivity {
         if (mBlue.isEnabled())
         {
             boolean discovery_on = mBlue.startDiscovery();
-            //This is just to check that discovery is on not part of the final product
-            if(discovery_on)
-            {
-                Context context = getApplicationContext();
-                CharSequence text = "ON!";
-                int duration = Toast.LENGTH_SHORT;
 
-                Toast toast = Toast.makeText(context, text, duration);
-                toast.show();
-            }
             // Create a BroadcastReceiver for ACTION_FOUND
             mReceiver = new BroadcastReceiver() {
                 public void onReceive(Context context, Intent intent) {
@@ -597,7 +588,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             };
-            btlist.add("ricky");
             ArrayAdapter <String> btAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, btlist);
             bluetoothList.setAdapter(btAdapter);
             bluetoothList.requestLayout();
