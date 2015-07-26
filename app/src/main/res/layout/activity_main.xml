@@ -135,7 +135,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/footer"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:id="@+id/hi">
 
         <Button
             android:layout_width="wrap_content"
@@ -154,8 +155,21 @@
             android:id="@+id/button2"
             android:textColor="#540115"
             android:onClick="buttonClick"
+            android:layout_marginBottom="10dp"
+            android:background="#cdc092" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/scan"
+            android:id="@+id/button3"
+            android:textColor="#540115"
+            android:onClick="connect"
             android:background="#cdc092" />
     </LinearLayout>
+
+
+
+
 
     <TextView
         android:layout_width="match_parent"
@@ -165,5 +179,15 @@
         android:id="@+id/footer"
         android:layout_alignParentBottom="true"
         android:gravity="center"
-        android:textColor="#cdc092" />
+        android:textColor="#cdc092"
+        />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/bluetoothlist"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:background="#ff540115"
+        android:visibility="gone" />
 </RelativeLayout>

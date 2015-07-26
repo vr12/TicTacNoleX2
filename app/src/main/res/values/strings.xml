@@ -9,6 +9,7 @@
     <string name="box">Box</string>
     <string name="hvc">1 Player</string>
     <string name="hvh">2 Player</string>
+    <string name="scan">Scan</string>
     <string name="turn1">Player 1 (X)</string>
     <string name="turn2">Player 2 (O)</string>
     <string name="newGame">New Game</string>
