@@ -20,6 +20,7 @@
     <string name="win4">You Win!</string>
     <string name="computerWin">The Computer Wins.</string>
 
+
     <string-array name="iconOptions">
         <item>Player 1: X</item>
         <item>FSU</item>

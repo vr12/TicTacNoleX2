@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private int request_enable_bt = 1;
     private ArrayAdapter mArrayAdapter;
     BluetoothAdapter mBlue;
-    List<String> btlist;
+    ArrayList<String> btlist;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -527,24 +527,35 @@ public class MainActivity extends AppCompatActivity {
         //List view to display possible match
         ListView bluetoothList = (ListView) findViewById(R.id.bluetoothlist);
         btlist = new ArrayList<String>();
-        if(bluetoothList.getVisibility()!= View.VISIBLE) {
-            bluetoothList.setVisibility(View.VISIBLE);
-        }
+
         // Bluetooth connectivity
         mBlue = BluetoothAdapter.getDefaultAdapter();
-        if (!mBlue.isEnabled()) {
-            Intent enableBt = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBt, request_enable_bt);
-        }
-
         BroadcastReceiver mReceiver;
+
+
         //Turn on bluetooth if off
         if (!mBlue.isEnabled()) {
             Intent enableBt = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBt, request_enable_bt);
         }
+
+        //Makes phone discoverable
+        Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+        startActivity(discoverableIntent);
         if (mBlue.isEnabled())
         {
+            boolean discovery_on = mBlue.startDiscovery();
+            //This is just to check that discovery is on not part of the final product
+            if(discovery_on)
+            {
+                Context context = getApplicationContext();
+                CharSequence text = "ON!";
+                int duration = Toast.LENGTH_SHORT;
+
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
+            }
             // Create a BroadcastReceiver for ACTION_FOUND
             mReceiver = new BroadcastReceiver() {
                 public void onReceive(Context context, Intent intent) {
@@ -561,9 +572,13 @@ public class MainActivity extends AppCompatActivity {
             btlist.add("ricky");
             ArrayAdapter <String> btAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, btlist);
             bluetoothList.setAdapter(btAdapter);
+            bluetoothList.requestLayout();
             // Register the BroadcastReceiver
             IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
             registerReceiver(mReceiver, filter); // Don't forget to unregister during onDestroy
+            if(bluetoothList.getVisibility()!= View.VISIBLE) {
+                bluetoothList.setVisibility(View.VISIBLE);
+            }
         }
     }
 
