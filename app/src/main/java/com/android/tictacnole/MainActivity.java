@@ -8,7 +8,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -51,8 +50,6 @@ public class MainActivity extends AppCompatActivity {
 	
 	//for extra sound effects and audio control
     private SoundPool soundPool;
-    private AudioManager audioManager;
-    private float volume;
     private int sound[] = new int[7];
 
     @Override
@@ -100,13 +97,7 @@ public class MainActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         icons.setAdapter(adapter);
 		
-		//set audio control and sounds
-        audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
-		float actVolume = (float) audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-		float maxVolume = (float) audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-		volume = actVolume / maxVolume;
-		this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
-		
+		//load sound effects
 		soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
 		sound[0] = soundPool.load(this, R.raw.flipsound, 1);
 		sound[1] = soundPool.load(this, R.raw.fsuchantwin, 1);
@@ -289,8 +280,7 @@ public class MainActivity extends AppCompatActivity {
             boxImageViews[idNum].setImageResource(R.drawable.x);
             fragment.board[idNum] = 'x';
 			soundPool.play(sound[0], 1, 1, 1, 0, 1f);
-        }
-        else {
+        } else {
             boxImageViews[idNum].setImageResource(R.drawable.o);
 
             fragment.board[idNum] = 'o';
@@ -399,6 +389,7 @@ public class MainActivity extends AppCompatActivity {
 
         //winner is 2
         else if (fragment.winner == 2) {
+		    soundPool.play(sound[1], 1, 1, 1, 0, 1f);
             if (fragment.gameMode == 1) {
                 TV1.setText(R.string.computerWin);
                 toast = Toast.makeText(getApplicationContext(), "The Computer Wins.", Toast.LENGTH_LONG);
@@ -411,6 +402,7 @@ public class MainActivity extends AppCompatActivity {
                 toast.show();
                 soundPool.play(sound[1], 1, 1, 1, 0, 1f);
             }
+            soundPool.play(sound[1], volume, volume, 1, 0, 1f);
         }
 		
         //tie
