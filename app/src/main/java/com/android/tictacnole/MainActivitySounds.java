@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity
     private SoundPool soundPool;
     private AudioManager audioManager;
     private float volume;
-    private int sound[] = new int[5];
+    private int sound[] = new int[7];
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -83,6 +83,11 @@ public class MainActivity extends AppCompatActivity
 		soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
 		sound[0] = soundPool.load(this, R.raw.flipsound, 1);
 		sound[1] = soundPool.load(this, R.raw.fsuchantwin, 1);
+		sound[2] = soundPool.load(this, R.raw.ufwin, 1);
+		sound[3] = soundPool.load(this, R.raw.usfwinwin, 1);
+		sound[4] = soundPool.load(this, R.raw.ucfwin, 1);
+		sound[5] = soundPool.load(this, R.raw.famuwin, 1);
+		sound[6] = soundPool.load(this, R.raw.fauwin, 1);
     }
 
     @Override
