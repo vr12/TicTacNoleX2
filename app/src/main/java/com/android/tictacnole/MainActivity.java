@@ -22,7 +22,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemSelectedListener;
-
+import android.media.SoundPool;
+import android.media.AudioManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -47,6 +48,12 @@ public class MainActivity extends AppCompatActivity {
     private ArrayAdapter mArrayAdapter;
     BluetoothAdapter mBlue;
     ArrayList<String> btlist;
+	
+	//for extra sound effects and audio control
+    private SoundPool soundPool;
+    private AudioManager audioManager;
+    private float volume;
+    private int sounds[] = new int[7];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +99,22 @@ public class MainActivity extends AppCompatActivity {
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         icons.setAdapter(adapter);
+		
+		//set audio control and sounds
+        audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+		float actVolume = (float) audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+		float maxVolume = (float) audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+		volume = actVolume / maxVolume;
+		this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
+		
+		soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+		sound[0] = soundPool.load(this, R.raw.flipsound, 1);
+		sound[1] = soundPool.load(this, R.raw.fsuchantwin, 1);
+		sound[2] = soundPool.load(this, R.raw.ufwin, 1);
+		sound[3] = soundPool.load(this, R.raw.usfwinwin, 1);
+		sound[4] = soundPool.load(this, R.raw.ucfwin, 1);
+		sound[5] = soundPool.load(this, R.raw.famuwin, 1);
+		sound[6] = soundPool.load(this, R.raw.fauwin, 1);
     }
 
     @Override
@@ -265,11 +288,13 @@ public class MainActivity extends AppCompatActivity {
         if (fragment.turn == 1) {
             boxImageViews[idNum].setImageResource(R.drawable.x);
             fragment.board[idNum] = 'x';
+			soundPool.play(sound[0], volume, volume, 1, 0, 1f);
         } else {
             boxImageViews[idNum].setImageResource(R.drawable.o);
-            fragment.board[idNum] = 'o';
+            fragment.board[idNum] = 'o
+			soundPool.play(sound[0], volume, volume, 1, 0, 1f);
         }
-
+		
         //check for winner
         lookforWinner();
         if (fragment.winner != 0)
@@ -363,6 +388,7 @@ public class MainActivity extends AppCompatActivity {
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
             }
+			soundPool.play(sound[1], volume, volume, 1, 0, 1f);
         }
 
         //winner is 2
