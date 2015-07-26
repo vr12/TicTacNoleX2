@@ -1,13 +1,15 @@
 package com.android.tictacnole;
 
+import android.app.FragmentManager;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,13 +17,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import android.app.FragmentManager;
-import android.widget.Toast;
-import android.view.Gravity;
 
 
 
@@ -555,5 +555,10 @@ public class MainActivity extends AppCompatActivity {
             IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
             registerReceiver(mReceiver, filter); // Don't forget to unregister during onDestroy
         }
+    }
+
+    public void icons(View view)
+    {
+        //let player choose icon for self (pick 2 if not over bluetooth)
     }
 }
