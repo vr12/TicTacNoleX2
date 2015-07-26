@@ -289,15 +289,16 @@ public class MainActivity extends AppCompatActivity {
             boxImageViews[idNum].setImageResource(R.drawable.x);
             fragment.board[idNum] = 'x';
 			soundPool.play(sound[0], 1, 1, 1, 0, 1f);
-        } else {
+        }
+        else {
             boxImageViews[idNum].setImageResource(R.drawable.o);
-<<<<<<< HEAD
-            fragment.board[idNum] = 'o
+
+            fragment.board[idNum] = 'o';
 			soundPool.play(sound[0], 1, 1, 1, 0, 1f);
-=======
+
             fragment.board[idNum] = 'o';
 			soundPool.play(sound[0], volume, volume, 1, 0, 1f);
->>>>>>> origin/Bluetooth
+
         }
 		
         //check for winner
@@ -394,13 +395,10 @@ public class MainActivity extends AppCompatActivity {
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
             }
-            soundPool.play(sound[1], volume, volume, 1, 0, 1f);
-			
         }
 
         //winner is 2
         else if (fragment.winner == 2) {
-		    soundPool.play(sound[1], 1, 1, 1, 0, 1f);
             if (fragment.gameMode == 1) {
                 TV1.setText(R.string.computerWin);
                 toast = Toast.makeText(getApplicationContext(), "The Computer Wins.", Toast.LENGTH_LONG);
@@ -411,8 +409,8 @@ public class MainActivity extends AppCompatActivity {
                 toast = Toast.makeText(getApplicationContext(), "Player 2 Wins!", Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
+                soundPool.play(sound[1], 1, 1, 1, 0, 1f);
             }
-            soundPool.play(sound[1], volume, volume, 1, 0, 1f);
         }
 		
         //tie
