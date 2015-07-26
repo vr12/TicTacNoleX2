@@ -10,8 +10,7 @@
     <string name="hvc">1 Player</string>
     <string name="hvh">2 Player</string>
     <string name="scan">Bluetooth</string>
-    <string name="icon1">Player 1 icon</string>
-    <string name="icon2">Player 2 icon</string>
+    <string name="icons">Icons</string>
     <string name="turn1">Player 1 (X)</string>
     <string name="turn2">Player 2 (O)</string>
     <string name="newGame">New Game</string>
@@ -20,4 +19,21 @@
     <string name="win3">Tie Game.</string>
     <string name="win4">You Win!</string>
     <string name="computerWin">The Computer Wins.</string>
+
+    <string-array name="iconOptions">
+        <item>Player 1: X</item>
+        <item>FSU</item>
+        <item>UF</item>
+        <item>USF</item>
+        <item>UCF</item>
+        <item>FAMU</item>
+        <item>FAU</item>
+        <item>Player 2: O</item>
+        <item>FSU</item>
+        <item>UF</item>
+        <item>USF</item>
+        <item>UCF</item>
+        <item>FAMU</item>
+        <item>FAU</item>
+    </string-array>
 </resources>

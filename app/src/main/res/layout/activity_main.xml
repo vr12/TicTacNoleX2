@@ -135,7 +135,7 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/options"
+        android:layout_above="@+id/icons"
         android:gravity="center_horizontal"
         android:id="@+id/hi">
 
@@ -160,32 +160,14 @@
             android:background="#cdc092" />
     </LinearLayout>
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
+    <Spinner
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/icons"
+        android:id="@+id/icons"
         android:layout_above="@+id/bluetooth"
-        android:gravity="center_horizontal"
-        android:id="@+id/options">
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/icon1"
-            android:id="@+id/icon1"
-            android:textColor="#540115"
-            android:onClick="iconClick"
-            android:background="#cdc092"
-            android:layout_marginRight="10dp" />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/icon2"
-            android:id="@+id/icon2"
-            android:textColor="#540115"
-            android:onClick="iconClick"
-            android:background="#cdc092" />
-    </LinearLayout>
+        android:background="#cdc092"
+        android:layout_marginRight="10dp" />
 
     <Button
         android:layout_width="wrap_content"
