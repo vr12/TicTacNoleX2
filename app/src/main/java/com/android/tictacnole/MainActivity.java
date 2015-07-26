@@ -290,11 +290,11 @@ public class MainActivity extends AppCompatActivity {
         if (fragment.turn == 1) {
             boxImageViews[idNum].setImageResource(R.drawable.x);
             fragment.board[idNum] = 'x';
-			soundPool.play(sound[0], volume, volume, 1, 0, 1f);
+			soundPool.play(sound[0], 1, 1, 1, 0, 1f);
         } else {
             boxImageViews[idNum].setImageResource(R.drawable.o);
             fragment.board[idNum] = 'o
-			soundPool.play(sound[0], volume, volume, 1, 0, 1f);
+			soundPool.play(sound[0], 1, 1, 1, 0, 1f);
         }
 		
         //check for winner
@@ -379,6 +379,7 @@ public class MainActivity extends AppCompatActivity {
         Toast toast;
         //winner is 1
         if (fragment.winner == 1) {
+			soundPool.play(sound[1], 1, 1, 1, 0, 1f);
             if (fragment.gameMode == 1) {
                 TV1.setText(R.string.win4);
                 toast = Toast.makeText(getApplicationContext(), "You Win!", Toast.LENGTH_LONG);
@@ -395,6 +396,7 @@ public class MainActivity extends AppCompatActivity {
 
         //winner is 2
         else if (fragment.winner == 2) {
+		    soundPool.play(sound[1], 1, 1, 1, 0, 1f);
             if (fragment.gameMode == 1) {
                 TV1.setText(R.string.computerWin);
                 toast = Toast.makeText(getApplicationContext(), "The Computer Wins.", Toast.LENGTH_LONG);
@@ -407,8 +409,6 @@ public class MainActivity extends AppCompatActivity {
                 toast.show();
             }
         }
-	
-	    soundPool.play(sound[1], volume, volume, 1, 0, 1f);
 		
         //tie
         else {
