@@ -133,12 +133,12 @@ public class MainActivity extends Activity {
         SpinnerArray.add("FAMU");
         SpinnerArray.add("FAU");
         SpinnerArray.add("Player 2: O");
-        SpinnerArray.add("FSU ");
-        SpinnerArray.add("UF ");
-        SpinnerArray.add("USF ");
-        SpinnerArray.add("UCF ");
-        SpinnerArray.add("FAMU ");
-        SpinnerArray.add("FAU ");
+        SpinnerArray.add("FSU2");
+        SpinnerArray.add("UF2");
+        SpinnerArray.add("USF2");
+        SpinnerArray.add("UCF2");
+        SpinnerArray.add("FAMU2");
+        SpinnerArray.add("FAU2");
 
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
@@ -197,37 +197,37 @@ public class MainActivity extends Activity {
                     z=0;
                 }
 
-                else if (text.equals("FSU"))
+                else if (text.equals("FSU2"))
                 {
                     z=1;
 					winSound2 = soundPool.load(context, R.raw.fsuchantwin, 1);
                 }
 
-                else if (text.equals("UF"))
+                else if (text.equals("UF2"))
                 {
                     z=2;
 					winSound2 = soundPool.load(context, R.raw.ufwin, 1);
                 }
 
-                else if (text.equals("USF"))
+                else if (text.equals("USF2"))
                 {
                     z=3;
 					winSound2 = soundPool.load(context, R.raw.usfwin, 1);
                 }
 
-                else if (text.equals("UCF"))
+                else if (text.equals("UCF2"))
                 {
                     z=4;
 					winSound2 = soundPool.load(context, R.raw.ucfwin, 1);
                 }
 
-                else if (text.equals("FAMU"))
+                else if (text.equals("FAMU2"))
                 {
                     z=5;
 					winSound2 = soundPool.load(context, R.raw.famuwin, 1);
                 }
 
-                else if (text.equals("FAU"))
+                else if (text.equals("FAU2"))
                 {
                     z=6;
 					winSound2 = soundPool.load(context, R.raw.fauwin, 1);
@@ -501,7 +501,7 @@ public class MainActivity extends Activity {
         Toast toast;
         //winner is 1
         if (fragment.winner == 1) {
-			soundPool.play(winSound, 1, 1, 1, 0, 1f);
+            soundPool.play(winSound, 1, 1, 1, 0, 1f);
             if (fragment.gameMode == 1) {
                 TV1.setText(R.string.win4);
                 toast = Toast.makeText(getApplicationContext(), "You Win!", Toast.LENGTH_LONG);
@@ -517,13 +517,13 @@ public class MainActivity extends Activity {
 
         //winner is 2
         else if (fragment.winner == 2) {
-			soundPool.play(winSound2, 1, 1, 1, 0, 1f);
             if (fragment.gameMode == 1) {
                 TV1.setText(R.string.computerWin);
                 toast = Toast.makeText(getApplicationContext(), "The Computer Wins.", Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
             } else {
+                soundPool.play(winSound2, 1, 1, 1, 0, 1f);
                 TV1.setText(R.string.win2);
                 toast = Toast.makeText(getApplicationContext(), "Player 2 Wins!", Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
