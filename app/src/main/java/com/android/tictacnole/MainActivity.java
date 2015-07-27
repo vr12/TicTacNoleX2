@@ -43,7 +43,8 @@ public class MainActivity extends AppCompatActivity {
     BluetoothAdapter mBlue;
     ArrayList<String> btlist;
 
- /*   ArrayList<BluetoothDevice> devices;
+ /*
+    ArrayList<BluetoothDevice> devices;
     public static final UUID MY_UUID = UUID.fromString("e7ed2c99-fecd-4935-952f-1ca273c11485");
     protected static final int success = 0;
     protected static final int message = 1;
@@ -404,7 +405,6 @@ public class MainActivity extends AppCompatActivity {
 
         //winner is 2
         else if (fragment.winner == 2) {
-		    soundPool.play(sound[1], 1, 1, 1, 0, 1f);
             if (fragment.gameMode == 1) {
                 TV1.setText(R.string.computerWin);
                 toast = Toast.makeText(getApplicationContext(), "The Computer Wins.", Toast.LENGTH_LONG);
