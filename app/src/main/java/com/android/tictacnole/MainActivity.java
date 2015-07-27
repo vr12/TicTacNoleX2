@@ -599,7 +599,7 @@ public class MainActivity extends Activity {
         boxViews[position].setClickable(false);
 
         if (fragment.turn == 1) {
-            boxImageViews[position].setImageResource(myImageList2[z]);
+            boxImageViews[position].setImageResource(myImageList2[y]);
             fragment.board[position] = 'x';
         } else {
             boxImageViews[position].setImageResource(myImageList2[z]);
@@ -750,8 +750,8 @@ public class MainActivity extends Activity {
         if(mArrayAdapter.getItem(arg2).contains("Paired")){
 
             BluetoothDevice selectedDevice = devices.get(arg2);
-            ConnectThread connect = new ConnectThread(selectedDevice);
-            connect.start();
+            ConnectThread connection = new ConnectThread(selectedDevice);
+            connection.start();
         }
         else{
             Toast.makeText(getApplicationContext(), "device is not paired", Toast.LENGTH_SHORT).show();
@@ -760,21 +760,21 @@ public class MainActivity extends Activity {
 
     private class ConnectThread extends Thread {
 
-        private final BluetoothSocket mmSocket;
-        private final BluetoothDevice mmDevice;
+        private final BluetoothSocket mSocket;
+        private final BluetoothDevice mDevice;
 
         public ConnectThread(BluetoothDevice device) {
             // Use a temporary object that is later assigned to mmSocket,
-            // because mmSocket is final
-            BluetoothSocket tmp = null;
-            mmDevice = device;
+            // because mSocket is final
+            BluetoothSocket x = null;
+            mDevice = device;
             // Get a BluetoothSocket to connect with the given BluetoothDevice
             try {
-                tmp = device.createRfcommSocketToServiceRecord(uuid);
+                x = device.createRfcommSocketToServiceRecord(uuid);
             } catch (IOException e) {
 
             }
-            mmSocket = tmp;
+            mSocket = x;
         }
 
         public void run() {
@@ -800,37 +800,34 @@ public class MainActivity extends Activity {
     }
 
     private class ConnectedThread extends Thread {
-        private final BluetoothSocket mmSocket;
-        private final InputStream mmInStream;
-        private final OutputStream mmOutStream;
+        private final BluetoothSocket mSocket;
+        private final InputStream mInStream;
+        private final OutputStream mOutStream;
 
         public ConnectedThread(BluetoothSocket socket) {
-            mmSocket = socket;
-            InputStream tmpIn = null;
-            OutputStream tmpOut = null;
+            mSocket = socket;
+            InputStream in = null;
+            OutputStream out = null;
 
             // Get the input and output streams, using temp objects because
             // member streams are final
             try {
-                tmpIn = socket.getInputStream();
-                tmpOut = socket.getOutputStream();
+                in = socket.getInputStream();
+                out = socket.getOutputStream();
             } catch (IOException e) { }
 
-            mmInStream = tmpIn;
-            mmOutStream = tmpOut;
+            mInStream = in;
+            mOutStream = out;
         }
 
         public void run() {
             byte[] buffer;  // buffer store for the stream
             int bytes; // bytes returned from read()
 
-            // Keep listening to the InputStream until an exception occurs
             while (true) {
                 try {
-                    // Read from the InputStream
                     buffer = new byte[1024];
-                    bytes = mmInStream.read(buffer);
-                    // Send the obtained bytes to the UI activity
+                    bytes = mInStream.read(buffer);
                     mHandler.obtainMessage(message, bytes, -1, buffer)
                             .sendToTarget();
 
@@ -842,13 +839,13 @@ public class MainActivity extends Activity {
 
         public void write(byte[] bytes) {
             try {
-                mmOutStream.write(bytes);
+                mOutStream.write(bytes);
             } catch (IOException e) { }
         }
 
         public void cancel() {
             try {
-                mmSocket.close();
+                mSocket.close();
             } catch (IOException e) { }
         }
     }
