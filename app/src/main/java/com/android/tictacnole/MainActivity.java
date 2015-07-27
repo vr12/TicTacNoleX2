@@ -1,25 +1,18 @@
 package com.android.tictacnole;
 
-import android.app.Activity;
 import android.app.FragmentManager;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -27,16 +20,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.UUID;
-import java.util.logging.Handler;
 
 
-public class MainActivity extends AppCompatActivity implements OnItemClickListener {
+public class MainActivity extends AppCompatActivity {
     private MyFragment fragment;
 
     //save views for all boxes
@@ -53,32 +41,31 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
     private ArrayAdapter<String> mArrayAdapter;
     BluetoothAdapter mBlue;
     ArrayList<String> btlist;
-    ArrayList<BluetoothDevice> devices;
+ /*   ArrayList<BluetoothDevice> devices;
     public static final UUID MY_UUID = UUID.fromString("e7ed2c99-fecd-4935-952f-1ca273c11485");
+    protected static final int success = 0;
+    protected static final int message = 1;
     Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
-            // TODO Auto-generated method stub
-            Log.i(tag, "in handler");
             super.handleMessage(msg);
             switch(msg.what){
-                case SUCCESS_CONNECT:
+                case success:
                     // DO something
                     ConnectedThread connectedThread = new ConnectedThread((BluetoothSocket)msg.obj);
-                    Toast.makeText(getApplicationContext(), "CONNECT", 0).show();
+                    Toast.makeText(getApplicationContext(), "CONNECT", Toast.LENGTH_SHORT).show();
                     String s = "successfully connected";
                     connectedThread.write(s.getBytes());
-                    Log.i(tag, "connected");
                     break;
-                case MESSAGE_READ:
+                case message:
                     byte[] readBuf = (byte[])msg.obj;
                     String string = new String(readBuf);
-                    Toast.makeText(getApplicationContext(), string, 0).show();
+                    Toast.makeText(getApplicationContext(), string, Toast.LENGTH_SHORT).show();
                     break;
             }
         }
     };
-
+*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -558,7 +545,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         //List view to display possible match
         ListView bluetoothList = (ListView) findViewById(R.id.bluetoothlist);
         btlist = new ArrayList<String>();
-        devices = new ArrayList<BluetoothDevice>();
+        //devices = new ArrayList<BluetoothDevice>();
 
         // Bluetooth connectivity
         mBlue = BluetoothAdapter.getDefaultAdapter();
@@ -596,13 +583,12 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
                     if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                         // Get the BluetoothDevice object from the Intent
                         BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                        devices.add(device);
+                        //devices.add(device);
                         // Add the name and address to an array adapter to show in a ListView
                         btlist.add(device.getName() + "\n" + device.getAddress());
                     }
                 }
             };
-            btlist.add("ricky");
             mArrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, btlist);
             bluetoothList.setAdapter(mArrayAdapter);
             bluetoothList.requestLayout();
@@ -614,10 +600,8 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
             }
         }
     }
-
+/*
     public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-        // TODO Auto-generated method stub
-
         if(mBlue.isDiscovering()){
             mBlue.cancelDiscovery();
         }
@@ -670,12 +654,9 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
 
             // Do work to manage the connection (in a separate thread)
 
-            mHandler.obtainMessage(SUCCESS_CONNECT, mmSocket).sendToTarget();
+            mHandler.obtainMessage(success, mmSocket).sendToTarget();
         }
 
-
-
-        /** Will cancel an in-progress connection, and close the socket */
         public void cancel() {
             try {
                 mmSocket.close();
@@ -715,7 +696,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
                     buffer = new byte[1024];
                     bytes = mmInStream.read(buffer);
                     // Send the obtained bytes to the UI activity
-                    mHandler.obtainMessage(MESSAGE_READ, bytes, -1, buffer)
+                    mHandler.obtainMessage(message, bytes, -1, buffer)
                             .sendToTarget();
 
                 } catch (IOException e) {
@@ -724,14 +705,12 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
             }
         }
 
-        /* Call this from the main activity to send data to the remote device */
         public void write(byte[] bytes) {
             try {
                 mmOutStream.write(bytes);
             } catch (IOException e) { }
         }
 
-        /* Call this from the main activity to shutdown the connection */
         public void cancel() {
             try {
                 mmSocket.close();
@@ -753,5 +732,5 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         {
 
         }
-    }
+    }*/
 }
