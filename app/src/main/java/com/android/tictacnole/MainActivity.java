@@ -75,7 +75,8 @@ public class MainActivity extends AppCompatActivity {
 */
     //for extra sound effects and audio control
     private SoundPool soundPool;
-    private int sound[] = new int[7];
+    private int flipSound;
+	private int winSound;
 
     int[] myImageList1 = new int[]{R.drawable.x, R.drawable.fsu,R.drawable.uf, R.drawable.usf,R.drawable.ucf, R.drawable.famu,R.drawable.fau};
     int[] myImageList2 = new int[]{R.drawable.o,R.drawable.fsu,R.drawable.uf, R.drawable.usf,R.drawable.ucf, R.drawable.famu,R.drawable.fau};
@@ -121,13 +122,7 @@ public class MainActivity extends AppCompatActivity {
 		
 		//load sound effects
 		soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
-		sound[0] = soundPool.load(this, R.raw.flipsound, 1);
-		sound[1] = soundPool.load(this, R.raw.fsuchantwin, 1);
-		sound[2] = soundPool.load(this, R.raw.ufwin, 1);
-		sound[3] = soundPool.load(this, R.raw.usfwin, 1);
-		sound[4] = soundPool.load(this, R.raw.ucfwin, 1);
-		sound[5] = soundPool.load(this, R.raw.famuwin, 1);
-		sound[6] = soundPool.load(this, R.raw.fauwin, 1);
+		flipSound = soundPool.load(this, R.raw.flipsound, 1);
 
         Spinner icons = (Spinner) findViewById(R.id.icons);
         List<String> SpinnerArray = new ArrayList<String>();
@@ -165,31 +160,37 @@ public class MainActivity extends AppCompatActivity {
                 else if (text=="FSU")
                 {
                     y=1;
+					winSound = soundPool.load(this, R.raw.fsuchantwin, 1);
                 }
 
                 else if (text=="UF")
                 {
                     y=2;
+				    winSound = soundPool.load(this, R.raw.ufwin, 1);
                 }
 
                 else if (text=="USF")
                 {
                     y=3;
+					winSound = soundPool.load(this, R.raw.usfwin, 1);
                 }
 
                 else if (text=="UCF")
                 {
                     y=4;
+					winSound = soundPool.load(this, R.raw.ucfwin, 1);
                 }
 
                 else if (text=="FAMU")
                 {
                     y=5;
+					winSound = soundPool.load(this, R.raw.famuwin, 1);
                 }
 
                 else if (text=="FAU")
                 {
                     y=6;
+					winSound = soundPool.load(this, R.raw.fauwin, 1);
                 }
 
                 else if (text=="Player 2: O")
@@ -200,31 +201,37 @@ public class MainActivity extends AppCompatActivity {
                 else if (text=="FSU ")
                 {
                     z=1;
+					winSound = soundPool.load(this, R.raw.fsuchantwin, 1);
                 }
 
                 else if (text=="UF ")
                 {
                     z=2;
+					winSound = soundPool.load(this, R.raw.ufwin, 1);
                 }
 
                 else if (text=="USF ")
                 {
                     z=3;
+					winSound = soundPool.load(this, R.raw.usfwin, 1);
                 }
 
                 else if (text=="UCF ")
                 {
                     z=4;
+					winSound = soundPool.load(this, R.raw.ucfwin, 1);
                 }
 
                 else if (text=="FAMU ")
                 {
                     z=5;
+					winSound = soundPool.load(this, R.raw.famuwin, 1);
                 }
 
                 else if (text=="FAU ")
                 {
                     z=6;
+					winSound = soundPool.load(this, R.raw.fauwin, 1);
                 }
             }
 
@@ -406,11 +413,11 @@ public class MainActivity extends AppCompatActivity {
         if (fragment.turn == 1) {
             boxImageViews[idNum].setImageResource(myImageList1[y]);
             fragment.board[idNum] = 'x';
-			soundPool.play(sound[0], 1, 1, 1, 0, 1f);
+			soundPool.play(flipSound, 1, 1, 1, 0, 1f);
         } else {
             boxImageViews[idNum].setImageResource(myImageList2[z]);
             fragment.board[idNum] = 'o';
-			soundPool.play(sound[0], 1, 1, 1, 0, 1f);
+			soundPool.play(flipSound, 1, 1, 1, 0, 1f);
         }
 
         //check for winner
@@ -495,7 +502,7 @@ public class MainActivity extends AppCompatActivity {
         Toast toast;
         //winner is 1
         if (fragment.winner == 1) {
-			soundPool.play(sound[1], 1, 1, 1, 0, 1f);
+			soundPool.play(winSound, 1, 1, 1, 0, 1f);
             if (fragment.gameMode == 1) {
                 TV1.setText(R.string.win4);
                 toast = Toast.makeText(getApplicationContext(), "You Win!", Toast.LENGTH_LONG);
@@ -521,7 +528,7 @@ public class MainActivity extends AppCompatActivity {
                 toast = Toast.makeText(getApplicationContext(), "Player 2 Wins!", Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
-                soundPool.play(sound[1], 1, 1, 1, 0, 1f);
+                soundPool.play(winSound, 1, 1, 1, 0, 1f);
             }
         }
 
