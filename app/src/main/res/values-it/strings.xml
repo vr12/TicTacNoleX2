@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="action_settings">Impostazioni</string>
+    <string name="box">Scatola</string>
+    <string name="computerWin">Il Computer Vince .</string>
+    <string name="footer">Creato Da : Fantastico 0100</string>
+    <string name="hello_world">Ciao Mondo!</string>
+    <string name="hvc">1 Giocatore</string>
+    <string name="hvh">2 giocatores</string>
+    <string name="newGame">Nuovo Gioco</string>
+    <string name="turn1">Primo Giocatore (X)</string>
+    <string name="turn2">Secondo Giocatore (O)</string>
+    <string name="welcome">Accoglienza!</string>
+    <string name="win1">Giocatore Uno Vince!</string>
+    <string name="win2">Giocatore Due Vittorie!</string>
+    <string name="win3">Gioco Cravatta.</string>
+    <string name="win4">Hai Vinto!</string>
+</resources>
