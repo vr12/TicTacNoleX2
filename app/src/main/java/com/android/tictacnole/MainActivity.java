@@ -74,7 +74,7 @@ public class MainActivity extends Activity {
     //for extra sound effects and audio control
     private SoundPool soundPool;
     private int flipSound;
-	private int winSound;
+	private int winSound, winSound2;
 
     int[] myImageList1 = new int[]{R.drawable.x, R.drawable.fsu,R.drawable.uf, R.drawable.usf,R.drawable.ucf, R.drawable.famu,R.drawable.fau};
     int[] myImageList2 = new int[]{R.drawable.o,R.drawable.fsu,R.drawable.uf, R.drawable.usf,R.drawable.ucf, R.drawable.famu,R.drawable.fau};
@@ -200,37 +200,37 @@ public class MainActivity extends Activity {
                 else if (text.equals("FSU"))
                 {
                     z=1;
-					winSound = soundPool.load(context, R.raw.fsuchantwin, 1);
+					winSound2 = soundPool.load(context, R.raw.fsuchantwin, 1);
                 }
 
                 else if (text.equals("UF"))
                 {
                     z=2;
-					winSound = soundPool.load(context, R.raw.ufwin, 1);
+					winSound2 = soundPool.load(context, R.raw.ufwin, 1);
                 }
 
                 else if (text.equals("USF"))
                 {
                     z=3;
-					winSound = soundPool.load(context, R.raw.usfwin, 1);
+					winSound2 = soundPool.load(context, R.raw.usfwin, 1);
                 }
 
                 else if (text.equals("UCF"))
                 {
                     z=4;
-					winSound = soundPool.load(context, R.raw.ucfwin, 1);
+					winSound2 = soundPool.load(context, R.raw.ucfwin, 1);
                 }
 
                 else if (text.equals("FAMU"))
                 {
                     z=5;
-					winSound = soundPool.load(context, R.raw.famuwin, 1);
+					winSound2 = soundPool.load(context, R.raw.famuwin, 1);
                 }
 
                 else if (text.equals("FAU"))
                 {
                     z=6;
-					winSound = soundPool.load(context, R.raw.fauwin, 1);
+					winSound2 = soundPool.load(context, R.raw.fauwin, 1);
                 }
             }
 
@@ -517,7 +517,7 @@ public class MainActivity extends Activity {
 
         //winner is 2
         else if (fragment.winner == 2) {
-			soundPool.play(winSound, 1, 1, 1, 0, 1f);
+			soundPool.play(winSound2, 1, 1, 1, 0, 1f);
             if (fragment.gameMode == 1) {
                 TV1.setText(R.string.computerWin);
                 toast = Toast.makeText(getApplicationContext(), "The Computer Wins.", Toast.LENGTH_LONG);
