@@ -135,9 +135,26 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/footer"
+        android:layout_below="@+id/tableLayout"
         android:gravity="center_horizontal">
 
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/icons"
+            android:id="@+id/icons"
+            android:background="#cdc092"
+            android:layout_marginRight="10dp" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/scan"
+            android:id="@+id/bluetooth"
+            android:layout_marginTop="10dp"
+            android:textColor="#540115"
+            android:onClick="connect"
+            android:background="#cdc092" />
     </LinearLayout>
 
     <TextView

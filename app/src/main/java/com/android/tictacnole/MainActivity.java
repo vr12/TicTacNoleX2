@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
  /*
     ArrayList<BluetoothDevice> devices;
-    public static final UUID MY_UUID = UUID.fromString("e7ed2c99-fecd-4935-952f-1ca273c11485");
+    public static final UUID uuid = UUID.fromString("e7ed2c99-fecd-4935-952f-1ca273c11485");
     protected static final int success = 0;
     protected static final int message = 1;
     Handler mHandler = new Handler(){
@@ -58,16 +58,15 @@ public class MainActivity extends AppCompatActivity {
             super.handleMessage(msg);
             switch(msg.what){
                 case success:
-                    // DO something
                     ConnectedThread connectedThread = new ConnectedThread((BluetoothSocket)msg.obj);
                     Toast.makeText(getApplicationContext(), "CONNECT", Toast.LENGTH_SHORT).show();
-                    String s = "successfully connected";
+                    String s = "connected";
                     connectedThread.write(s.getBytes());
                     break;
                 case message:
                     byte[] readBuf = (byte[])msg.obj;
-                    String string = new String(readBuf);
-                    Toast.makeText(getApplicationContext(), string, Toast.LENGTH_SHORT).show();
+                    String s = new String(readBuf);
+                    Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
                     break;
             }
         }
@@ -152,83 +151,83 @@ public class MainActivity extends AppCompatActivity {
                 Spinner mySpinner=(Spinner) findViewById(R.id.icons);
                 String text = mySpinner.getSelectedItem().toString();
 
-                if (text=="Player 1: X")
+                if (text.equals("Player 1: X"))
                 {
                     y=0;
                 }
 
-                else if (text=="FSU")
+                else if (text.equals("FSU"))
                 {
                     y=1;
 					winSound = soundPool.load(this, R.raw.fsuchantwin, 1);
                 }
 
-                else if (text=="UF")
+                else if (text.equals("UF"))
                 {
                     y=2;
 				    winSound = soundPool.load(this, R.raw.ufwin, 1);
                 }
 
-                else if (text=="USF")
+                else if (text.equals("USF"))
                 {
                     y=3;
 					winSound = soundPool.load(this, R.raw.usfwin, 1);
                 }
 
-                else if (text=="UCF")
+                else if (text.equals("UCF"))
                 {
                     y=4;
 					winSound = soundPool.load(this, R.raw.ucfwin, 1);
                 }
 
-                else if (text=="FAMU")
+                else if (text.equals("FAMU"))
                 {
                     y=5;
 					winSound = soundPool.load(this, R.raw.famuwin, 1);
                 }
 
-                else if (text=="FAU")
+                else if (text.equals("FAU"))
                 {
                     y=6;
 					winSound = soundPool.load(this, R.raw.fauwin, 1);
                 }
 
-                else if (text=="Player 2: O")
+                else if (text.equals("Player 2: O"))
                 {
                     z=0;
                 }
 
-                else if (text=="FSU ")
+                else if (text.equals("FSU"))
                 {
                     z=1;
 					winSound = soundPool.load(this, R.raw.fsuchantwin, 1);
                 }
 
-                else if (text=="UF ")
+                else if (text.equals("UF"))
                 {
                     z=2;
 					winSound = soundPool.load(this, R.raw.ufwin, 1);
                 }
 
-                else if (text=="USF ")
+                else if (text.equals("USF"))
                 {
                     z=3;
 					winSound = soundPool.load(this, R.raw.usfwin, 1);
                 }
 
-                else if (text=="UCF ")
+                else if (text.equals("UCF"))
                 {
                     z=4;
 					winSound = soundPool.load(this, R.raw.ucfwin, 1);
                 }
 
-                else if (text=="FAMU ")
+                else if (text.equals("FAMU"))
                 {
                     z=5;
 					winSound = soundPool.load(this, R.raw.famuwin, 1);
                 }
 
-                else if (text=="FAU ")
+                else if (text.equals("FAU"))
                 {
                     z=6;
 					winSound = soundPool.load(this, R.raw.fauwin, 1);
@@ -771,8 +770,7 @@ public class MainActivity extends AppCompatActivity {
             mmDevice = device;
             // Get a BluetoothSocket to connect with the given BluetoothDevice
             try {
-                // MY_UUID is the app's UUID string, also used by the server code
-                tmp = device.createRfcommSocketToServiceRecord(MY_UUID);
+                tmp = device.createRfcommSocketToServiceRecord(uuid);
             } catch (IOException e) {
 
             }
@@ -780,22 +778,16 @@ public class MainActivity extends AppCompatActivity {
         }
 
         public void run() {
-            // Cancel discovery because it will slow down the connection
             mBlue.cancelDiscovery();
             try {
-                // Connect the device through the socket. This will block
-                // until it succeeds or throws an exception
                 mmSocket.connect();
 
             } catch (IOException connectException) {
-                // Unable to connect; close the socket and get out
                 try {
                     mmSocket.close();
                 } catch (IOException closeException) { }
                 return;
             }
-
-            // Do work to manage the connection (in a separate thread)
 
             mHandler.obtainMessage(success, mmSocket).sendToTarget();
         }

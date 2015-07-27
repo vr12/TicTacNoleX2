@@ -15,4 +15,21 @@
     <string name="win2">Giocatore Due Vittorie!</string>
     <string name="win3">Gioco Cravatta.</string>
     <string name="win4">Hai Vinto!</string>
+
+    <string-array name="iconOptions">
+       <item>Premier Joueur: X</item>
+       <item>FSU</item>
+       <item>UF</item>
+       <item>USF</item>
+       <item>UCF</item>
+       <item>FAMU</item>
+       <item>FAU</item>
+       <item>Deuxieme Joueur: O</item>
+       <item>FSU</item>
+       <item>UF</item>
+       <item>USF</item>
+       <item>UCF</item>
+       <item>FAMU</item>
+       <item>FAU</item>
+    </string-array>
 </resources>
