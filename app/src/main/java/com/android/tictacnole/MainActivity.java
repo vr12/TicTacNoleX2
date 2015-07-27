@@ -11,7 +11,6 @@ import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,14 +23,14 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
     private MyFragment fragment;
+	private Context context;
 
     //save views for all boxes
     private View[] boxViews = new View[9];
@@ -120,8 +119,9 @@ public class MainActivity extends AppCompatActivity {
         fixRotation();
 		
 		//load sound effects
+		context = getApplicationContext();
 		soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
-		flipSound = soundPool.load(this, R.raw.flipsound, 1);
+		flipSound = soundPool.load(context, R.raw.flipsound, 1);
 
         Spinner icons = (Spinner) findViewById(R.id.icons);
         List<String> SpinnerArray = new ArrayList<String>();
@@ -159,37 +159,37 @@ public class MainActivity extends AppCompatActivity {
                 else if (text.equals("FSU"))
                 {
                     y=1;
-					winSound = soundPool.load(this, R.raw.fsuchantwin, 1);
+					winSound = soundPool.load(context, R.raw.fsuchantwin, 1);
                 }
 
                 else if (text.equals("UF"))
                 {
                     y=2;
-				    winSound = soundPool.load(this, R.raw.ufwin, 1);
+				    winSound = soundPool.load(context, R.raw.ufwin, 1);
                 }
 
                 else if (text.equals("USF"))
                 {
                     y=3;
-					winSound = soundPool.load(this, R.raw.usfwin, 1);
+					winSound = soundPool.load(context, R.raw.usfwin, 1);
                 }
 
                 else if (text.equals("UCF"))
                 {
                     y=4;
-					winSound = soundPool.load(this, R.raw.ucfwin, 1);
+					winSound = soundPool.load(context, R.raw.ucfwin, 1);
                 }
 
                 else if (text.equals("FAMU"))
                 {
                     y=5;
-					winSound = soundPool.load(this, R.raw.famuwin, 1);
+					winSound = soundPool.load(context, R.raw.famuwin, 1);
                 }
 
                 else if (text.equals("FAU"))
                 {
                     y=6;
-					winSound = soundPool.load(this, R.raw.fauwin, 1);
+					winSound = soundPool.load(context, R.raw.fauwin, 1);
                 }
 
                 else if (text.equals("Player 2: O"))
@@ -200,37 +200,37 @@ public class MainActivity extends AppCompatActivity {
                 else if (text.equals("FSU"))
                 {
                     z=1;
-					winSound = soundPool.load(this, R.raw.fsuchantwin, 1);
+					winSound = soundPool.load(context, R.raw.fsuchantwin, 1);
                 }
 
                 else if (text.equals("UF"))
                 {
                     z=2;
-					winSound = soundPool.load(this, R.raw.ufwin, 1);
+					winSound = soundPool.load(context, R.raw.ufwin, 1);
                 }
 
                 else if (text.equals("USF"))
                 {
                     z=3;
-					winSound = soundPool.load(this, R.raw.usfwin, 1);
+					winSound = soundPool.load(context, R.raw.usfwin, 1);
                 }
 
                 else if (text.equals("UCF"))
                 {
                     z=4;
-					winSound = soundPool.load(this, R.raw.ucfwin, 1);
+					winSound = soundPool.load(context, R.raw.ucfwin, 1);
                 }
 
                 else if (text.equals("FAMU"))
                 {
                     z=5;
-					winSound = soundPool.load(this, R.raw.famuwin, 1);
+					winSound = soundPool.load(context, R.raw.famuwin, 1);
                 }
 
                 else if (text.equals("FAU"))
                 {
                     z=6;
-					winSound = soundPool.load(this, R.raw.fauwin, 1);
+					winSound = soundPool.load(context, R.raw.fauwin, 1);
                 }
             }
 
