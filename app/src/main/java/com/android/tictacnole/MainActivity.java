@@ -1,5 +1,6 @@
 package com.android.tictacnole;
 
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -15,6 +16,8 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -23,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 
@@ -73,6 +77,11 @@ public class MainActivity extends AppCompatActivity {
     private SoundPool soundPool;
     private int sound[] = new int[7];
 
+    int[] myImageList1 = new int[]{R.drawable.x, R.drawable.fsu,R.drawable.uf, R.drawable.usf,R.drawable.ucf, R.drawable.famu,R.drawable.fau};
+    int[] myImageList2 = new int[]{R.drawable.o,R.drawable.fsu,R.drawable.uf, R.drawable.usf,R.drawable.ucf, R.drawable.famu,R.drawable.fau};
+    int y=0;
+    int z=0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,14 +118,6 @@ public class MainActivity extends AppCompatActivity {
         TV2 = (TextView) findViewById(R.id.button2);
 
         fixRotation();
-
-        Spinner icons = (Spinner) findViewById(R.id.icons);
-
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.iconOptions, android.R.layout.simple_spinner_item);
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        icons.setAdapter(adapter);
 		
 		//load sound effects
 		soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
@@ -127,6 +128,111 @@ public class MainActivity extends AppCompatActivity {
 		sound[4] = soundPool.load(this, R.raw.ucfwin, 1);
 		sound[5] = soundPool.load(this, R.raw.famuwin, 1);
 		sound[6] = soundPool.load(this, R.raw.fauwin, 1);
+
+        Spinner icons = (Spinner) findViewById(R.id.icons);
+        List<String> SpinnerArray = new ArrayList<String>();
+        SpinnerArray.add("Player 1: X");
+        SpinnerArray.add("FSU");
+        SpinnerArray.add("UF");
+        SpinnerArray.add("USF");
+        SpinnerArray.add("UCF");
+        SpinnerArray.add("FAMU");
+        SpinnerArray.add("FAU");
+        SpinnerArray.add("Player 2: O");
+        SpinnerArray.add("FSU ");
+        SpinnerArray.add("UF ");
+        SpinnerArray.add("USF ");
+        SpinnerArray.add("UCF ");
+        SpinnerArray.add("FAMU ");
+        SpinnerArray.add("FAU ");
+
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, SpinnerArray);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        icons.setAdapter(adapter);
+        icons.setOnItemSelectedListener(new OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Spinner mySpinner=(Spinner) findViewById(R.id.icons);
+                String text = mySpinner.getSelectedItem().toString();
+
+                if (text=="Player 1: X")
+                {
+                    y=0;
+                }
+
+                else if (text=="FSU")
+                {
+                    y=1;
+                }
+
+                else if (text=="UF")
+                {
+                    y=2;
+                }
+
+                else if (text=="USF")
+                {
+                    y=3;
+                }
+
+                else if (text=="UCF")
+                {
+                    y=4;
+                }
+
+                else if (text=="FAMU")
+                {
+                    y=5;
+                }
+
+                else if (text=="FAU")
+                {
+                    y=6;
+                }
+
+                else if (text=="Player 2: O")
+                {
+                    z=0;
+                }
+
+                else if (text=="FSU ")
+                {
+                    z=1;
+                }
+
+                else if (text=="UF ")
+                {
+                    z=2;
+                }
+
+                else if (text=="USF ")
+                {
+                    z=3;
+                }
+
+                else if (text=="UCF ")
+                {
+                    z=4;
+                }
+
+                else if (text=="FAMU ")
+                {
+                    z=5;
+                }
+
+                else if (text=="FAU ")
+                {
+                    z=6;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     @Override
@@ -194,9 +300,9 @@ public class MainActivity extends AppCompatActivity {
                 if (fragment.winner == 0)
                     boxViews[i].setClickable(true);
             } else if (c == 'x')
-                boxImageViews[i].setImageResource(R.drawable.x);
+                boxImageViews[i].setImageResource(myImageList1[y]);
             else
-                boxImageViews[i].setImageResource(R.drawable.o);
+                boxImageViews[i].setImageResource(myImageList2[z]);
         }
     }
 
@@ -298,11 +404,11 @@ public class MainActivity extends AppCompatActivity {
         boxViews[idNum].setClickable(false);
 
         if (fragment.turn == 1) {
-            boxImageViews[idNum].setImageResource(R.drawable.x);
+            boxImageViews[idNum].setImageResource(myImageList1[y]);
             fragment.board[idNum] = 'x';
 			soundPool.play(sound[0], 1, 1, 1, 0, 1f);
         } else {
-            boxImageViews[idNum].setImageResource(R.drawable.o);
+            boxImageViews[idNum].setImageResource(myImageList2[z]);
             fragment.board[idNum] = 'o';
 			soundPool.play(sound[0], 1, 1, 1, 0, 1f);
         }
@@ -487,10 +593,10 @@ public class MainActivity extends AppCompatActivity {
         boxViews[position].setClickable(false);
 
         if (fragment.turn == 1) {
-            boxImageViews[position].setImageResource(R.drawable.x);
+            boxImageViews[position].setImageResource(myImageList2[z]);
             fragment.board[position] = 'x';
         } else {
-            boxImageViews[position].setImageResource(R.drawable.o);
+            boxImageViews[position].setImageResource(myImageList2[z]);
             fragment.board[position] = 'o';
         }
     }
@@ -613,6 +719,23 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    public class SpinnerActivity extends Activity implements OnItemSelectedListener
+    {
+        public void onItemSelected(AdapterView<?> parent, View view, int pos, long id)
+        {
+            parent.getItemAtPosition(pos);
+
+            Spinner spinner = (Spinner) findViewById(R.id.icons);
+            spinner.setOnItemSelectedListener(this);
+        }
+
+        public void onNothingSelected(AdapterView<?> parent)
+        {
+
+        }
+    }
+
 /*
     public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
         if(mBlue.isDiscovering()){
@@ -730,20 +853,5 @@ public class MainActivity extends AppCompatActivity {
             } catch (IOException e) { }
         }
     }
-
-    public class SpinnerActivity extends Activity implements OnItemSelectedListener
-    {
-        public void onItemSelected(AdapterView<?> parent, View view, int pos, long id)
-        {
-            parent.getItemAtPosition(pos);
-
-            Spinner spinner = (Spinner) findViewById(R.id.icons);
-            spinner.setOnItemSelectedListener(this);
-        }
-
-        public void onNothingSelected(AdapterView<?> parent)
-        {
-
-        }
-    }*/
+*/
 }
