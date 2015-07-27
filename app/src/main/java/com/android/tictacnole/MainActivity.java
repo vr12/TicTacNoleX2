@@ -1,6 +1,5 @@
 package com.android.tictacnole;
 
-import android.app.Activity;
 import android.app.FragmentManager;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -16,8 +15,6 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -27,8 +24,6 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Random;
-
-
 
 
 public class MainActivity extends AppCompatActivity {
@@ -44,12 +39,36 @@ public class MainActivity extends AppCompatActivity {
     private TextView TV2;
 
     //For bluetooth connection
-    private int request_enable_bt = 1;
     private ArrayAdapter mArrayAdapter;
     BluetoothAdapter mBlue;
     ArrayList<String> btlist;
-	
-	//for extra sound effects and audio control
+
+ /*   ArrayList<BluetoothDevice> devices;
+    public static final UUID MY_UUID = UUID.fromString("e7ed2c99-fecd-4935-952f-1ca273c11485");
+    protected static final int success = 0;
+    protected static final int message = 1;
+    Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch(msg.what){
+                case success:
+                    // DO something
+                    ConnectedThread connectedThread = new ConnectedThread((BluetoothSocket)msg.obj);
+                    Toast.makeText(getApplicationContext(), "CONNECT", Toast.LENGTH_SHORT).show();
+                    String s = "successfully connected";
+                    connectedThread.write(s.getBytes());
+                    break;
+                case message:
+                    byte[] readBuf = (byte[])msg.obj;
+                    String string = new String(readBuf);
+                    Toast.makeText(getApplicationContext(), string, Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+    };
+*/
+    //for extra sound effects and audio control
     private SoundPool soundPool;
     private int sound[] = new int[7];
 
@@ -286,7 +305,7 @@ public class MainActivity extends AppCompatActivity {
             fragment.board[idNum] = 'o';
 			soundPool.play(sound[0], 1, 1, 1, 0, 1f);
         }
-		
+
         //check for winner
         lookforWinner();
         if (fragment.winner != 0)
@@ -399,7 +418,7 @@ public class MainActivity extends AppCompatActivity {
                 soundPool.play(sound[1], 1, 1, 1, 0, 1f);
             }
         }
-		
+
         //tie
         else {
             TV1.setText(R.string.win3);
@@ -544,9 +563,11 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void connect(View v) {
+        int request_enable_bt = 1;
         //List view to display possible match
         ListView bluetoothList = (ListView) findViewById(R.id.bluetoothlist);
         btlist = new ArrayList<String>();
+        //devices = new ArrayList<BluetoothDevice>();
 
         // Bluetooth connectivity
         mBlue = BluetoothAdapter.getDefaultAdapter();
@@ -575,6 +596,7 @@ public class MainActivity extends AppCompatActivity {
                     if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                         // Get the BluetoothDevice object from the Intent
                         BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                        //devices.add(device);
                         // Add the name and address to an array adapter to show in a ListView
                         btlist.add(device.getName() + "\n" + device.getAddress());
                     }
@@ -589,6 +611,123 @@ public class MainActivity extends AppCompatActivity {
             if(bluetoothList.getVisibility()!= View.VISIBLE) {
                 bluetoothList.setVisibility(View.VISIBLE);
             }
+        }
+    }
+/*
+    public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+        if(mBlue.isDiscovering()){
+            mBlue.cancelDiscovery();
+        }
+        if(mArrayAdapter.getItem(arg2).contains("Paired")){
+
+            BluetoothDevice selectedDevice = devices.get(arg2);
+            ConnectThread connect = new ConnectThread(selectedDevice);
+            connect.start();
+        }
+        else{
+            Toast.makeText(getApplicationContext(), "device is not paired", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private class ConnectThread extends Thread {
+
+        private final BluetoothSocket mmSocket;
+        private final BluetoothDevice mmDevice;
+
+        public ConnectThread(BluetoothDevice device) {
+            // Use a temporary object that is later assigned to mmSocket,
+            // because mmSocket is final
+            BluetoothSocket tmp = null;
+            mmDevice = device;
+            // Get a BluetoothSocket to connect with the given BluetoothDevice
+            try {
+                // MY_UUID is the app's UUID string, also used by the server code
+                tmp = device.createRfcommSocketToServiceRecord(MY_UUID);
+            } catch (IOException e) {
+
+            }
+            mmSocket = tmp;
+        }
+
+        public void run() {
+            // Cancel discovery because it will slow down the connection
+            mBlue.cancelDiscovery();
+            try {
+                // Connect the device through the socket. This will block
+                // until it succeeds or throws an exception
+                mmSocket.connect();
+
+            } catch (IOException connectException) {
+                // Unable to connect; close the socket and get out
+                try {
+                    mmSocket.close();
+                } catch (IOException closeException) { }
+                return;
+            }
+
+            // Do work to manage the connection (in a separate thread)
+
+            mHandler.obtainMessage(success, mmSocket).sendToTarget();
+        }
+
+        public void cancel() {
+            try {
+                mmSocket.close();
+            } catch (IOException e) { }
+        }
+    }
+
+    private class ConnectedThread extends Thread {
+        private final BluetoothSocket mmSocket;
+        private final InputStream mmInStream;
+        private final OutputStream mmOutStream;
+
+        public ConnectedThread(BluetoothSocket socket) {
+            mmSocket = socket;
+            InputStream tmpIn = null;
+            OutputStream tmpOut = null;
+
+            // Get the input and output streams, using temp objects because
+            // member streams are final
+            try {
+                tmpIn = socket.getInputStream();
+                tmpOut = socket.getOutputStream();
+            } catch (IOException e) { }
+
+            mmInStream = tmpIn;
+            mmOutStream = tmpOut;
+        }
+
+        public void run() {
+            byte[] buffer;  // buffer store for the stream
+            int bytes; // bytes returned from read()
+
+            // Keep listening to the InputStream until an exception occurs
+            while (true) {
+                try {
+                    // Read from the InputStream
+                    buffer = new byte[1024];
+                    bytes = mmInStream.read(buffer);
+                    // Send the obtained bytes to the UI activity
+                    mHandler.obtainMessage(message, bytes, -1, buffer)
+                            .sendToTarget();
+
+                } catch (IOException e) {
+                    break;
+                }
+            }
+        }
+
+        public void write(byte[] bytes) {
+            try {
+                mmOutStream.write(bytes);
+            } catch (IOException e) { }
+        }
+
+        public void cancel() {
+            try {
+                mmSocket.close();
+            } catch (IOException e) { }
         }
     }
 
@@ -606,5 +745,5 @@ public class MainActivity extends AppCompatActivity {
         {
 
         }
-    }
+    }*/
 }
