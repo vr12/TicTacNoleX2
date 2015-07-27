@@ -517,6 +517,7 @@ public class MainActivity extends Activity {
 
         //winner is 2
         else if (fragment.winner == 2) {
+			soundPool.play(winSound, 1, 1, 1, 0, 1f);
             if (fragment.gameMode == 1) {
                 TV1.setText(R.string.computerWin);
                 toast = Toast.makeText(getApplicationContext(), "The Computer Wins.", Toast.LENGTH_LONG);
@@ -527,7 +528,6 @@ public class MainActivity extends Activity {
                 toast = Toast.makeText(getApplicationContext(), "Player 2 Wins!", Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
-                soundPool.play(winSound, 1, 1, 1, 0, 1f);
             }
         }
 
