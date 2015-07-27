@@ -4,7 +4,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity"
-    android:background="#540115">
+    android:background="#540115"
+    android:id="@+id/hello">
 
     <ImageView
         android:layout_width="match_parent"
@@ -13,7 +14,9 @@
         android:id="@+id/header"
         android:src="@drawable/header"
         android:contentDescription="@string/header"
-        android:scaleType="fitStart" />
+        android:scaleType="fitStart"
+
+        />
 
     <TableLayout
         android:layout_width="match_parent"
@@ -28,18 +31,20 @@
             android:layout_weight="1">
 
             <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:id="@+id/b1"
                 android:src="@drawable/gold"
                 android:layout_weight="1"
                 android:contentDescription="@string/box"
                 android:onClick="makeMove"
-                android:scaleType="fitXY" />
+                android:scaleType="fitXY"
+
+                />
 
             <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:id="@+id/b2"
                 android:src="@drawable/gold"
                 android:layout_weight="1"
@@ -48,8 +53,8 @@
                 android:scaleType="fitXY" />
 
             <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:id="@+id/b3"
                 android:src="@drawable/gold"
                 android:layout_weight="1"
@@ -64,8 +69,8 @@
             android:layout_weight="1">
 
             <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:id="@+id/b4"
                 android:src="@drawable/gold"
                 android:layout_weight="1"
@@ -74,8 +79,8 @@
                 android:scaleType="fitXY" />
 
             <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:id="@+id/b5"
                 android:src="@drawable/gold"
                 android:layout_weight="1"
@@ -84,8 +89,8 @@
                 android:scaleType="fitXY" />
 
             <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:id="@+id/b6"
                 android:src="@drawable/gold"
                 android:layout_weight="1"
@@ -100,8 +105,8 @@
             android:layout_weight="1">
 
             <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:id="@+id/b7"
                 android:src="@drawable/gold"
                 android:layout_weight="1"
@@ -109,8 +114,8 @@
                 android:onClick="makeMove"
                 android:scaleType="fitXY" />
             <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:id="@+id/b8"
                 android:src="@drawable/gold"
                 android:layout_weight="1"
@@ -119,8 +124,8 @@
                 android:scaleType="fitXY" />
 
             <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:id="@+id/b9"
                 android:src="@drawable/gold"
                 android:layout_weight="1"
@@ -131,11 +136,12 @@
     </TableLayout>
 
     <LinearLayout
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/footer"
-        android:gravity="center_horizontal">
+        android:layout_above="@+id/icons"
+        android:gravity="center_horizontal"
+        android:id="@+id/hi">
 
         <Button
             android:layout_width="wrap_content"
@@ -144,7 +150,7 @@
             android:id="@+id/button1"
             android:textColor="#540115"
             android:onClick="buttonClick"
-            android:layout_marginBottom="10dp"
+            android:layout_marginRight="10dp"
             android:background="#cdc092" />
 
         <Button
@@ -154,8 +160,30 @@
             android:id="@+id/button2"
             android:textColor="#540115"
             android:onClick="buttonClick"
+            android:layout_marginBottom="10dp"
             android:background="#cdc092" />
     </LinearLayout>
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/icons"
+        android:id="@+id/icons"
+        android:layout_above="@+id/bluetooth"
+        android:background="#cdc092"
+        android:layout_marginRight="10dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/scan"
+        android:id="@+id/bluetooth"
+        android:layout_above="@+id/footer"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:textColor="#540115"
+        android:onClick="connect"
+        android:background="#cdc092" />
 
     <TextView
         android:layout_width="match_parent"
@@ -165,5 +193,15 @@
         android:id="@+id/footer"
         android:layout_alignParentBottom="true"
         android:gravity="center"
-        android:textColor="#cdc092" />
+        android:textColor="#cdc092"
+        />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/bluetoothlist"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:background="#ff540115"
+        android:visibility="gone" />
 </RelativeLayout>

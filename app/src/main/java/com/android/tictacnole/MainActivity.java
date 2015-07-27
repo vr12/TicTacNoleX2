@@ -1,69 +1,68 @@
 package com.android.tictacnole;
 
+import android.app.Activity;
 import android.app.FragmentManager;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.wifi.WpsInfo;
-import android.net.wifi.p2p.WifiP2pConfig;
-import android.net.wifi.p2p.WifiP2pDevice;
-import android.net.wifi.p2p.WifiP2pDeviceList;
-import android.net.wifi.p2p.WifiP2pInfo;
-import android.net.wifi.p2p.WifiP2pManager;
-import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.DeviceListFragment.WiFiPeerListAdapter;
+import android.widget.AdapterView.OnItemSelectedListener;
 
-import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 
-public class MainActivity extends AppCompatActivity
-{
-    WifiP2pManager mManager;
-    Channel mChannel;
-    WiFiDirectBroadcastReceiver receiver;
-    IntentFilter mIntentFilter;
 
+
+public class MainActivity extends AppCompatActivity {
     private MyFragment fragment;
-    
+
     //save views for all boxes
     private View[] boxViews = new View[9];
     private ImageView[] boxImageViews = new ImageView[9];
-    
+
     //save views for other buttons
     private View View1;
     private TextView TV1;
     private TextView TV2;
 
+    //For bluetooth connection
+    private int request_enable_bt = 1;
+    private ArrayAdapter mArrayAdapter;
+    BluetoothAdapter mBlue;
+    ArrayList<String> btlist;
+
+    int[] myImageList1 = new int[]{R.drawable.x, R.drawable.fsu,R.drawable.uf, R.drawable.usf,R.drawable.ucf, R.drawable.famu,R.drawable.fau};
+    int[] myImageList2 = new int[]{R.drawable.o,R.drawable.fsu,R.drawable.uf, R.drawable.usf,R.drawable.ucf, R.drawable.famu,R.drawable.fau};
+    int y=0;
+    int z=0;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mIntentFilter = new IntentFilter();
-        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
-        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
-        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
-        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
 
         FragmentManager fmanager = getFragmentManager();
         fragment = (MyFragment) fmanager.findFragmentByTag("f");
 
         //create fragment
-        if (fragment == null)
-        {
+        if (fragment == null) {
             fragment = new MyFragment();
             fmanager.beginTransaction().add(fragment, "f").commit();
         }
@@ -80,119 +79,152 @@ public class MainActivity extends AppCompatActivity
         boxViews[8] = findViewById(R.id.b9);
 
         for (int i = 0; i < 9; i++)
-            boxImageViews[i] = (ImageView)boxViews[i];
+            boxImageViews[i] = (ImageView) boxViews[i];
 
         setBoxes(false);
-        
+
         View1 = findViewById(R.id.button1);
 
-        TV1 = (TextView)View1;
-        TV2 = (TextView)findViewById(R.id.button2);
+        TV1 = (TextView) View1;
+        TV2 = (TextView) findViewById(R.id.button2);
 
         fixRotation();
 
-        mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
-        mChannel = mManager.initialize(this, getMainLooper(), null);
-        receiver = new WiFiDirectBroadcastReceiver(mManager, mChannel, this);
+        Spinner icons = (Spinner) findViewById(R.id.icons);
+        List<String> SpinnerArray = new ArrayList<String>();
+        SpinnerArray.add("Player 1: X");
+        SpinnerArray.add("FSU");
+        SpinnerArray.add("UF");
+        SpinnerArray.add("USF");
+        SpinnerArray.add("UCF");
+        SpinnerArray.add("FAMU");
+        SpinnerArray.add("FAU");
+        SpinnerArray.add("Player 2: O");
+        SpinnerArray.add("FSU ");
+        SpinnerArray.add("UF ");
+        SpinnerArray.add("USF ");
+        SpinnerArray.add("UCF ");
+        SpinnerArray.add("FAMU ");
+        SpinnerArray.add("FAU ");
 
-        mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
 
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, SpinnerArray);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        icons.setAdapter(adapter);
+        icons.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
-            public void onSuccess() {
-                // Code for when the discovery initiation is successful goes here.
-                // No services have actually been discovered yet, so this method
-                // can often be left blank.  Code for peer discovery goes in the
-                // onReceive method, detailed below.
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Spinner mySpinner=(Spinner) findViewById(R.id.icons);
+                String text = mySpinner.getSelectedItem().toString();
+
+                if (text=="Player 1: X")
+                {
+                    y=0;
+                }
+
+                else if (text=="FSU")
+                {
+                    y=1;
+                }
+
+                else if (text=="UF")
+                {
+                    y=2;
+                }
+
+                else if (text=="USF")
+                {
+                    y=3;
+                }
+
+                else if (text=="UCF")
+                {
+                    y=4;
+                }
+
+                else if (text=="FAMU")
+                {
+                    y=5;
+                }
+
+                else if (text=="FAU")
+                {
+                    y=6;
+                }
+
+                else if (text=="Player 2: O")
+                {
+                    z=0;
+                }
+
+                else if (text=="FSU ")
+                {
+                    z=1;
+                }
+
+                else if (text=="UF ")
+                {
+                    z=2;
+                }
+
+                else if (text=="USF ")
+                {
+                    z=3;
+                }
+
+                else if (text=="UCF ")
+                {
+                    z=4;
+                }
+
+                else if (text=="FAMU ")
+                {
+                    z=5;
+                }
+
+                else if (text=="FAU ")
+                {
+                    z=6;
+                }
+
+
+
+
+
+
+
+
+
+
             }
 
             @Override
-            public void onFailure(int reasonCode) {
-                // Code for when the discovery initiation fails goes here.
-                // Alert the user that something went wrong.
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
-    }
 
-    private List peers = new ArrayList();
 
-    private WifiP2pManager.PeerListListener peerListListener = new WifiP2pManager.PeerListListener() {
-        @Override
-        public void onPeersAvailable(WifiP2pDeviceList peerList) {
-            // Out with the old, in with the new.
-            peers.clear();
-            peers.addAll(peerList.getDeviceList());
 
-            // If an AdapterView is backed by this data, notify it
-            // of the change.  For instance, if you have a ListView of available
-            // peers, trigger an update.
-            ((WiFiPeerListAdapter) getListAdapter()).notifyDataSetChanged();
-            if (peers.size() == 0) {
-                Log.d(WiFiDirectActivity.TAG, "No devices found");
-                return;
-            }
-        }
     }
 
     @Override
-    public void connect() {
-        // Picking the first device found on the network.
-        WifiP2pDevice device = peers.get(0);
-
-        WifiP2pConfig config = new WifiP2pConfig();
-        config.deviceAddress = device.deviceAddress;
-        config.wps.setup = WpsInfo.PBC;
-
-        mManager.connect(mChannel, config, new WifiP2pManager.ActionListener() {
-
-            @Override
-            public void onSuccess() {
-                // WiFiDirectBroadcastReceiver will notify us. Ignore for now.
-            }
-
-            @Override
-            public void onFailure(int reason) {
-                //error
-            }
-        });
-    }
-
-    @Override
-    public void onConnectionInfoAvailable(final WifiP2pInfo info) {
-
-        // InetAddress from WifiP2pInfo struct.
-        InetAddress groupOwnerAddress = info.groupOwnerAddress.getHostAddress();
-
-        // After the group negotiation, we can determine the group owner.
-        if (info.groupFormed && info.isGroupOwner) {
-            // Do whatever tasks are specific to the group owner.
-            // One common case is creating a server thread and accepting
-            // incoming connections.
-        } else if (info.groupFormed) {
-            // The other device acts as the client. In this case,
-            // you'll want to create a client thread that connects to the group
-            // owner.
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
+    public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
+    public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings)
-        {
+        if (id == R.id.action_settings) {
             return true;
         }
 
@@ -200,25 +232,19 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onPause()
-    {
+    protected void onPause() {
         super.onPause();
-        unregisterReceiver(receiver);
         fragment.mediaPlayer.pause();
     }
 
     @Override
-    protected void onResume()
-    {
+    protected void onResume() {
         super.onResume();
-        receiver = new WiFiDirectBroadcastReceiver(mManager, mChannel, this);
-        registerReceiver(receiver, intentFilter);
         fragment.mediaPlayer.start();
     }
 
     //fix widgets when screen is rotated
-    private void fixRotation()
-    {
+    private void fixRotation() {
         if (fragment.gameMode == 0)
             return;
 
@@ -228,8 +254,7 @@ public class MainActivity extends AppCompatActivity
         TV2.setText(R.string.newGame);
 
         //no winner yet
-        if (fragment.winner == 0)
-        {
+        if (fragment.winner == 0) {
             if (fragment.turn == 1)
                 TV1.setText(R.string.turn1);
             else
@@ -237,35 +262,28 @@ public class MainActivity extends AppCompatActivity
         }
 
         //winner chosen
-        else
-        {
+        else {
             setWinner();
         }
 
         //set boxes
-        for (int i = 0; i < 9; i++)
-        {
+        for (int i = 0; i < 9; i++) {
             char c = fragment.board[i];
 
-            if (c == '\0')
-            {
+            if (c == '\0') {
                 if (fragment.winner == 0)
                     boxViews[i].setClickable(true);
-            }
-            else if (c == 'x')
-                boxImageViews[i].setImageResource(R.drawable.x);
+            } else if (c == 'x')
+                boxImageViews[i].setImageResource(myImageList1[y]);
             else
-                boxImageViews[i].setImageResource(R.drawable.o);
+                boxImageViews[i].setImageResource(myImageList2[z]);
         }
     }
 
-    public void buttonClick(View view)
-    {
+    public void buttonClick(View view) {
         //set gameMode
-        if (fragment.gameMode == 0)
-        {
-            switch (view.getId())
-            {
+        if (fragment.gameMode == 0) {
+            switch (view.getId()) {
                 case R.id.button1:
                     fragment.gameMode = 1;
                     break;
@@ -296,17 +314,15 @@ public class MainActivity extends AppCompatActivity
 
         fragment.turn = 1;
         fragment.winner = 0;
-        for(int i = 0; i < 9; i++)
+        for (int i = 0; i < 9; i++)
             fragment.board[i] = '\0';
 
         fragment.gameMode = 0;
     }
 
     //make all boxes clickable or unclickable
-    private void setBoxes(boolean clickable)
-    {
-        for (int i = 0; i < 9; i++)
-        {
+    private void setBoxes(boolean clickable) {
+        for (int i = 0; i < 9; i++) {
             if (clickable)
                 boxViews[i].setClickable(true);
             else
@@ -314,16 +330,14 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void makeMove(View view)
-    {
+    public void makeMove(View view) {
         if (fragment.winner != 0)
             return;
 
         //find which box was clicked
         int idNum = 0;
 
-        switch (view.getId())
-        {
+        switch (view.getId()) {
             case R.id.b1:
                 idNum = 0;
                 break;
@@ -363,14 +377,11 @@ public class MainActivity extends AppCompatActivity
 
         boxViews[idNum].setClickable(false);
 
-        if (fragment.turn == 1)
-        {
-            boxImageViews[idNum].setImageResource(R.drawable.x);
+        if (fragment.turn == 1) {
+            boxImageViews[idNum].setImageResource(myImageList1[y]);
             fragment.board[idNum] = 'x';
-        }
-        else
-        {
-            boxImageViews[idNum].setImageResource(R.drawable.o);
+        } else {
+            boxImageViews[idNum].setImageResource(myImageList2[z]);
             fragment.board[idNum] = 'o';
         }
 
@@ -380,15 +391,11 @@ public class MainActivity extends AppCompatActivity
             return;
 
         //human vs. human
-        if (fragment.gameMode == 2)
-        {
-            if (fragment.turn == 1)
-            {
+        if (fragment.gameMode == 2) {
+            if (fragment.turn == 1) {
                 fragment.turn = 2;
                 TV1.setText(R.string.turn2);
-            }
-            else
-            {
+            } else {
                 fragment.turn = 1;
                 TV1.setText(R.string.turn1);
             }
@@ -405,8 +412,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     //see if current player has won
-    private void lookforWinner()
-    {
+    private void lookforWinner() {
         char c;
 
         if (fragment.turn == 1)
@@ -417,14 +423,13 @@ public class MainActivity extends AppCompatActivity
         int x = 0;
         boolean flag = false;
 
-        for (int i = 0; i < 3; i++)
-        {
+        for (int i = 0; i < 3; i++) {
             //check collumns
-            if (fragment.board[i] == fragment.board[i+3] && fragment.board[i+3] == fragment.board[i+6] && fragment.board[i] == c)
+            if (fragment.board[i] == fragment.board[i + 3] && fragment.board[i + 3] == fragment.board[i + 6] && fragment.board[i] == c)
                 flag = true;
 
             //check rows
-            if (fragment.board[x] == fragment.board[x+1] && fragment.board[x+1] == fragment.board[x+2] && fragment.board[x] == c)
+            if (fragment.board[x] == fragment.board[x + 1] && fragment.board[x + 1] == fragment.board[x + 2] && fragment.board[x] == c)
                 flag = true;
             x += 3;
         }
@@ -436,8 +441,7 @@ public class MainActivity extends AppCompatActivity
         if (fragment.board[4] == fragment.board[0] && fragment.board[0] == fragment.board[8] && fragment.board[4] == c)
             flag = true;
 
-        if (flag)
-        {
+        if (flag) {
             fragment.winner = fragment.turn;
             setWinner();
             return;
@@ -445,38 +449,30 @@ public class MainActivity extends AppCompatActivity
 
         //no more moves to make and no one wins
         boolean flag1 = true;
-        for (int i = 0; i < 9; i++)
-        {
-            if (fragment.board[i] == '\0')
-            {
+        for (int i = 0; i < 9; i++) {
+            if (fragment.board[i] == '\0') {
                 flag1 = false;
                 break;
             }
         }
 
-        if (flag1)
-        {
+        if (flag1) {
             fragment.winner = 3;
             setWinner();
         }
     }
 
     //set winner variable if there is a winner, stop the current game, and print winner
-    private void setWinner()
-    {
+    private void setWinner() {
         Toast toast;
         //winner is 1
-        if (fragment.winner == 1)
-        {
-            if (fragment.gameMode == 1)
-            {
+        if (fragment.winner == 1) {
+            if (fragment.gameMode == 1) {
                 TV1.setText(R.string.win4);
                 toast = Toast.makeText(getApplicationContext(), "You Win!", Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
-            }
-            else
-            {
+            } else {
                 TV1.setText(R.string.win1);
                 toast = Toast.makeText(getApplicationContext(), "Player 1 Wins!", Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
@@ -485,17 +481,13 @@ public class MainActivity extends AppCompatActivity
         }
 
         //winner is 2
-        else if (fragment.winner == 2)
-        {
-            if (fragment.gameMode == 1)
-            {
+        else if (fragment.winner == 2) {
+            if (fragment.gameMode == 1) {
                 TV1.setText(R.string.computerWin);
                 toast = Toast.makeText(getApplicationContext(), "The Computer Wins.", Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
-            }
-            else
-            {
+            } else {
                 TV1.setText(R.string.win2);
                 toast = Toast.makeText(getApplicationContext(), "Player 2 Wins!", Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
@@ -504,8 +496,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         //tie
-        else
-        {
+        else {
             TV1.setText(R.string.win3);
             toast = Toast.makeText(getApplicationContext(), "Tie Game.", Toast.LENGTH_LONG);
             toast.setGravity(Gravity.CENTER, 0, 0);
@@ -517,29 +508,25 @@ public class MainActivity extends AppCompatActivity
 
     //computer methods
 
-    private void computerTurn()
-    {
+    private void computerTurn() {
         fragment.turn = 2;
 
         //if you can win with this move
         int position = winningMove(false);
-        if (position != 10)
-        {
+        if (position != 10) {
             makecomputerMove(position);
             return;
         }
 
         //to block the opponents winning move
         position = winningMove(true);
-        if (position != 10)
-        {
+        if (position != 10) {
             makecomputerMove(position);
             return;
         }
 
         //take the center spot if it is open
-        if (fragment.board[4] == '\0')
-        {
+        if (fragment.board[4] == '\0') {
             makecomputerMove(4);
             return;
         }
@@ -552,17 +539,14 @@ public class MainActivity extends AppCompatActivity
         int[] spots = new int[8];
         int arraySlot = 0;
 
-        for (int i = 0; i < 9; i++)
-        {
-            if (fragment.board[i] == '\0')
-            {
+        for (int i = 0; i < 9; i++) {
+            if (fragment.board[i] == '\0') {
                 spots[arraySlot] = i;
                 arraySlot++;
             }
         }
 
-        if (arraySlot != 1)
-        {
+        if (arraySlot != 1) {
             //pass in one less than actual number because it includes 0
             Random r = new Random();
             position = r.nextInt((arraySlot - 1));
@@ -575,39 +559,31 @@ public class MainActivity extends AppCompatActivity
     }
 
     //mark computers move
-    private void makecomputerMove(int position)
-    {
+    private void makecomputerMove(int position) {
         boxViews[position].setClickable(false);
 
-        if (fragment.turn == 1)
-        {
-            boxImageViews[position].setImageResource(R.drawable.x);
+        if (fragment.turn == 1) {
+            boxImageViews[position].setImageResource(myImageList2[z]);
             fragment.board[position] = 'x';
-        }
-        else
-        {
-            boxImageViews[position].setImageResource(R.drawable.o);
+        } else {
+            boxImageViews[position].setImageResource(myImageList2[z]);
             fragment.board[position] = 'o';
         }
     }
 
     //returns 10 if a winning move cannot be made and the position if it can
     //if there is more than one winning move it returns the one it finds first
-    private int winningMove(boolean opponent)
-    {
+    private int winningMove(boolean opponent) {
         char c;
 
         //find char to look for
         //can be current player or opponent to help with blocking
-        if (fragment.turn == 1)
-        {
+        if (fragment.turn == 1) {
             if (opponent)
                 c = 'o';
             else
                 c = 'x';
-        }
-        else
-        {
+        } else {
             if (opponent)
                 c = 'x';
             else
@@ -615,49 +591,38 @@ public class MainActivity extends AppCompatActivity
         }
 
         //check collumn
-        for (int i = 0; i < 3; i++)
-        {
-            if (fragment.board[i] == '\0')
-            {
-                if (fragment.board[i+3] == fragment.board[i+6] && fragment.board[i+3] == c)
+        for (int i = 0; i < 3; i++) {
+            if (fragment.board[i] == '\0') {
+                if (fragment.board[i + 3] == fragment.board[i + 6] && fragment.board[i + 3] == c)
                     return i;
-            }
-            else if (fragment.board[i] == c)
-            {
-                if (fragment.board[i+3] == '\0' && fragment.board[i+6] == c)
-                    return (i+3);
-                else if (fragment.board[i+6] == '\0' && fragment.board[i+3] == c)
-                    return (i+6);
+            } else if (fragment.board[i] == c) {
+                if (fragment.board[i + 3] == '\0' && fragment.board[i + 6] == c)
+                    return (i + 3);
+                else if (fragment.board[i + 6] == '\0' && fragment.board[i + 3] == c)
+                    return (i + 6);
             }
         }
 
         //check row
-        for (int i = 0; i < 7; i += 3)
-        {
-            if (fragment.board[i] == '\0')
-            {
-                if (fragment.board[i+1] == fragment.board[i+2] && fragment.board[i+1] == c)
+        for (int i = 0; i < 7; i += 3) {
+            if (fragment.board[i] == '\0') {
+                if (fragment.board[i + 1] == fragment.board[i + 2] && fragment.board[i + 1] == c)
                     return i;
-            }
-            else if (fragment.board[i] == c)
-            {
-                if (fragment.board[i+2] == '\0' && fragment.board[i+1] == c)
-                    return (i+2);
-                else if (fragment.board[i+1] == '\0' && fragment.board[i+2] == c)
-                    return (i+1);
+            } else if (fragment.board[i] == c) {
+                if (fragment.board[i + 2] == '\0' && fragment.board[i + 1] == c)
+                    return (i + 2);
+                else if (fragment.board[i + 1] == '\0' && fragment.board[i + 2] == c)
+                    return (i + 1);
             }
         }
 
         //check diagonal
-        if (fragment.board[4] == '\0')
-        {
+        if (fragment.board[4] == '\0') {
             if (fragment.board[2] == fragment.board[6] && fragment.board[2] == c)
                 return 4;
             if (fragment.board[0] == fragment.board[8] && fragment.board[0] == c)
                 return 4;
-        }
-        else if (fragment.board[4] == c)
-        {
+        } else if (fragment.board[4] == c) {
             if (fragment.board[2] == '\0' && fragment.board[6] == c)
                 return 2;
             else if (fragment.board[6] == '\0' && fragment.board[2] == c)
@@ -670,5 +635,81 @@ public class MainActivity extends AppCompatActivity
 
         //if there is no winning move
         return 10;
+    }
+
+
+    public void connect(View v) {
+        //List view to display possible match
+        ListView bluetoothList = (ListView) findViewById(R.id.bluetoothlist);
+        btlist = new ArrayList<String>();
+
+        // Bluetooth connectivity
+        mBlue = BluetoothAdapter.getDefaultAdapter();
+        BroadcastReceiver mReceiver;
+
+
+        //Turn on bluetooth if off
+        if (!mBlue.isEnabled()) {
+            Intent enableBt = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBt, request_enable_bt);
+        }
+
+        //Makes phone discoverable
+        Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+        startActivity(discoverableIntent);
+        if (mBlue.isEnabled())
+        {
+            boolean discovery_on = mBlue.startDiscovery();
+            //This is just to check that discovery is on not part of the final product
+            if(discovery_on)
+            {
+                Context context = getApplicationContext();
+                CharSequence text = "ON!";
+                int duration = Toast.LENGTH_SHORT;
+
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
+            }
+            // Create a BroadcastReceiver for ACTION_FOUND
+            mReceiver = new BroadcastReceiver() {
+                public void onReceive(Context context, Intent intent) {
+                    String action = intent.getAction();
+                    // When discovery finds a device
+                    if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+                        // Get the BluetoothDevice object from the Intent
+                        BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                        // Add the name and address to an array adapter to show in a ListView
+                        btlist.add(device.getName() + "\n" + device.getAddress());
+                    }
+                }
+            };
+            btlist.add("ricky");
+            ArrayAdapter <String> btAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, btlist);
+            bluetoothList.setAdapter(btAdapter);
+            bluetoothList.requestLayout();
+            // Register the BroadcastReceiver
+            IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+            registerReceiver(mReceiver, filter); // Don't forget to unregister during onDestroy
+            if(bluetoothList.getVisibility()!= View.VISIBLE) {
+                bluetoothList.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    public class SpinnerActivity extends Activity implements OnItemSelectedListener
+    {
+        public void onItemSelected(AdapterView<?> parent, View view, int pos, long id)
+        {
+            parent.getItemAtPosition(pos);
+
+            Spinner spinner = (Spinner) findViewById(R.id.icons);
+            spinner.setOnItemSelectedListener(this);
+        }
+
+        public void onNothingSelected(AdapterView<?> parent)
+        {
+
+        }
     }
 }
